@@ -39,20 +39,6 @@ struct LoginView: View {
                         .frame(height: 50)
                     }
                     
-//                    Button {
-//                        // what happens after you click "next"
-//                        InputUserInformationView()
-//                    } label: {
-//                        ZStack {
-//                            RoundedRectangle(cornerRadius: 10)
-//                                .foregroundColor(Color.blue)
-//                            
-//                            Text("Next")
-//                                .foregroundColor(Color.white)
-//                                .bold()
-//                        }
-//                        .frame(height: 50)
-//                    }
                 }
                 
                 // learn about casca AI
