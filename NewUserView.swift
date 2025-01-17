@@ -13,21 +13,21 @@ struct NewUserView: View {
     @StateObject var viewModel = NewUserViewModel()
     @State private var showingDocumentPicker = false
     @State private var uploadedFileURL: URL?
+    @Binding var newUserPresented: Bool
     
     var body: some View {
         VStack {
-            
-            //title:
+            // Title
             Text("New User")
                 .font(.system(size: 32))
                 .bold()
-            
+                .padding(.top, 100)
             
             Form {
-                //getting the name of user
+                // User's name
                 TextField("Full Name", text: $viewModel.title)
                 
-                // Getting the PDF of bank statement
+                // PDF upload section
                 HStack {
                     Text("Bank Statement")
                         .font(.headline)
@@ -48,21 +48,32 @@ struct NewUserView: View {
                         .foregroundColor(.green)
                 }
                 
-                // Button
+                // Save button
                 TLButton(title: "Save",
                          background: .pink) {
-                    viewModel.save()
+                    
+                    if viewModel.canSave {
+                        viewModel.save()
+                        newUserPresented = false
+                    } else {
+                        viewModel.showAlert = true
+                    }
+                    
                 }
-                         .padding()
+                .padding()
             }
+            .alert(isPresented: $viewModel.showAlert) {
+                
+                Alert(title: Text("Error"), message: Text("Please fill in all fields."))
+                
+            }
+                
             
         }
         .sheet(isPresented: $showingDocumentPicker) {
-                    DocumentPicker(uploadedFileURL: $uploadedFileURL)
-            }
+            DocumentPicker(uploadedFileURL: $uploadedFileURL)
+        }
     }
-    
-
 }
 
 // Custom DocumentPicker
@@ -98,3 +109,4 @@ struct DocumentPicker: UIViewControllerRepresentable {
         }
     }
 }
+

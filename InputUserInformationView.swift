@@ -35,8 +35,8 @@ struct InputUserInformationView: View {
                         Image(systemName: "plus")
                     }
                 }
-                .sheet(isPresented: $viewModel.showingNewUserView){
-                    NewUserView()
+                .sheet(isPresented: $viewModel.showingNewUserView) {
+                                NewUserView(newUserPresented: $viewModel.showingNewUserView) // Pass the binding here
                     
                 }
                 
