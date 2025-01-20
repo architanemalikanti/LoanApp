@@ -100,10 +100,12 @@ class User(db.Model):
     email = db.Column(db.String, nullable=False)
     bankStatementURL = db.Column(db.String, nullable=False)
     password_digest = db.Column(db.String, nullable=False)
-    #applications
+    #application- relationship
+    applications = db.relationship("loanApplication", cascade="delete")
+
+
 
     #financial health information, which will be initialized using the ML model. 
-    #session information:
     #session information:
     session_token = db.Column(db.String, nullable=False)
     session_expiration = db.Column(db.DateTime, nullable=False)
@@ -146,7 +148,8 @@ class User(db.Model):
             "id": self.user_id,
             "fullName": self.fullName,
             "email": self.email,
-            "bankStatementURL": self.bankStatementURL
+            "bankStatementURL": self.bankStatementURL,
+            "applications": [s.serialize() for s in self.applications]
         }
 
 def create_User(fullName, bankStatementURL, email, password):
@@ -183,4 +186,30 @@ def verify_session(session_token):
 
 
 
-#a class for loan applications
+#a class for loan applications: many loan application
+#class for an assignment:
+class LoanApplication(db.Model):
+    #name of model:
+    __tablename__= "loanApplication"
+
+    #columns:
+    id= db.Column(db.Integer, primary_key=True, autoincrement=True)
+    dateApplied = db.Column(db.DateTime, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+    #initialize:
+    def __init__(self, **kwargs):
+        """
+        initialize an application object
+        """
+        self.dateApplied=kwargs.get("dateApplied", None)
+        self.user_id=kwargs.get("user_id") #raise an exeption, we will never have a case where field is empty. 
+
+
+    #serialize:
+    def serialize(self):
+        return {
+            "id": self.id,
+            "dateApplied": self.due_date.strftime("%Y-%m-%d %H:%M:%S"),
+            "user_id": self.user_id
+        }

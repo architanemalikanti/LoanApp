@@ -36,7 +36,7 @@ def extract_token(request):
     token=token.replace("Bearer", "").strip()
     return True, token
 
-#register a banker. 
+#register a USER or BANKER...route. remember, it depends whether its a banker or a user. 
 @app.route("/registerBanker/", methods=["POST"])
 def register_banker():
     body = json.loads(request.data)
@@ -52,7 +52,6 @@ def register_banker():
         "session_token": user.session_token,
         "session_expiration": str(user.session_expiration),
         "update_token": user.update_token
-
     })
 
 
@@ -74,6 +73,8 @@ def login():
         "update_token": user.update_token
 
     })
+
+#login user route:
 
 #register log in route:
 @app.route("/session/", methods=["POST"])
