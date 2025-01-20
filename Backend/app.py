@@ -35,9 +35,17 @@ def failure_response(error, status=404):
 
 
 
-@app.route("/compareusers/", methods=["POST"])
-def compare_users():
+@app.route("/adduser/", methods=["POST"])
+def add_user():
+    body = json.loads(request.data)
+
     
+
+
+@app.route("/processusers/", methods=["POST"])
+def process_users():
+
+  
 
 
 
