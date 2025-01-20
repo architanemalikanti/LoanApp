@@ -29,7 +29,7 @@ class BankerUser(db.Model):
         self.password_digest= bcrypt.hashpw(kwargs.get("password").encode("utf-8"), bcrypt.gensalt(rounds=13))
         self.renew_session()
 
-        #used to randomly generate/update session tokens:
+    #used to randomly generate/update session tokens:
     def _urlsafe_base_64(self):
         return hashlib.sha1(os.urandom(64)).hexdigest()
     
