@@ -27,7 +27,7 @@ struct HeaderView: View {
             
             VStack {
                 Text(title)
-                    .font(.system(size: 35))
+                    .font(.system(size: 20))
                     .foregroundColor(Color.white)
                     .bold()
                 

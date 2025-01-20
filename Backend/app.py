@@ -10,9 +10,6 @@ from db import verify_session
 
 
 
-
-
-
 app = Flask(__name__)
 db_filename = "casca.db"
 
@@ -39,7 +36,7 @@ def extract_token(request):
     token=token.replace("Bearer", "").strip()
     return True, token
 
-#add routes for logging in a banker. 
+#register a banker. 
 @app.route("/registerBanker/", methods=["POST"])
 def register_banker():
     body = json.loads(request.data)
@@ -98,6 +95,7 @@ def update_session():
         "update_token": user.update_token
     })
 
+#secret route
 @app.route("/secret/", methods=["GET"])
 def secret_message():
     success, session_token =extract_token(request)
@@ -114,14 +112,14 @@ def secret_message():
 
 
 
-
+#add a loan applicant route
 @app.route("/adduser/", methods=["POST"])
 def add_user():
     body = json.loads(request.data)
 
     
 
-
+#retrieve data for a loan applicant
 @app.route("/processusers/", methods=["POST"])
 def process_users():
 

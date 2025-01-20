@@ -11,7 +11,7 @@ struct LoginView: View {
         NavigationView {
             VStack {
                 // Header
-                HeaderView(title: "Welcome to CascaAI👋 ",
+                HeaderView(title: "Welcome to CascaAI @ Goldman Sachs👋 ",
                            subtitle: "Your AI Loan Assistant",
                            angle: 15,
                            background: .pink)
