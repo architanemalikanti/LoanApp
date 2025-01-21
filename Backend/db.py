@@ -164,12 +164,21 @@ def create_User(fullName, bankStatementURL, email, password):
     db.session.commit()
     return True, newUser
 
+#for User login:
 def verify_credentials(email, password):
     existing_user= User.query.filter(BankerUser.email==email).first()
     if not existing_user:
         return False, None
     
     return existing_user.verify_password(password), existing_user
+
+def verify_credentialsBanker(email, password):
+    existing_user= BankerUser.query.filter(BankerUser.email==email).first()
+    if not existing_user:
+        return False, None
+    
+    return existing_user.verify_password(password), existing_user
+
 
 def renew_session(update_token):
     existing_user= User.query.filter(User.update_token==update_token).first()

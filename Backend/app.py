@@ -4,9 +4,11 @@ from db import db
 from db import BankerUser, User
 import json
 from db import create_BankUser
+from db import create_User
 from db import verify_credentials
 from db import renew_session
 from db import verify_session
+from db import verify_credentialsBanker
 
 
 
@@ -37,13 +39,23 @@ def extract_token(request):
     return True, token
 
 #register a USER or BANKER...route. remember, it depends whether its a banker or a user. 
-@app.route("/registerBanker/", methods=["POST"])
+@app.route("/register/", methods=["POST"])
 def register_banker():
     body = json.loads(request.data)
-    email=body.get('email')
-    password = body.get('password')
+    role = body.get('role') #could be a user, or could be a banker. 
 
-    created, user= create_BankUser(email, password)
+    if role == "user":
+        #fullName, bankStatementURL, email, password
+        fullName=body.get('fullName')
+        bankStatementURL = body.get('bankStatementURL')
+        email=body.get('email')
+        password=body.get('password')
+        created, user = create_User(fullName, bankStatementURL, email, password)
+
+    if role == "banker":
+        email=body.get('email')
+        password=body.get('password')
+        created, user= create_BankUser(email, password)
 
     if not created:
         return failure_response("User already exists", 403)
@@ -55,8 +67,8 @@ def register_banker():
     })
 
 
-#log in bankeruser route:
-@app.route("/login/", methods=["POST"])
+#log in user route:
+@app.route("/loginUser/", methods=["POST"])
 def login():
     body = json.loads(request.data)
     email=body.get('email')
@@ -74,7 +86,24 @@ def login():
 
     })
 
-#login user route:
+#login bankuser route:
+@app.route("/bankUser/", methods=["POST"])
+def login():
+    body = json.loads(request.data)
+    email=body.get('email')
+    password = body.get('password')
+
+    valid_creds, user= verify_credentialsBanker(email, password)
+
+    if not valid_creds:
+        return failure_response("Invalid credentials")
+    
+    return success_response({
+        "session_token": user.session_token,
+        "session_expiration": str(user.session_expiration),
+        "update_token": user.update_token
+
+    })
 
 #register log in route:
 @app.route("/session/", methods=["POST"])
