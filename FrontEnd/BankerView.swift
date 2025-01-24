@@ -10,11 +10,14 @@ import SwiftUI
 struct BankerView: View {
     var body: some View {
         VStack {
-            Text("Banker")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .padding()
+            HeaderView(
+                title: "Today's Loan Applicants",
+                subtitle: "",
+                angle: -10,
+                background: .purple
+            )
+            .offset(y: 50)
         }
-        .navigationTitle("Banker Dashboard")
+        
     }
 }

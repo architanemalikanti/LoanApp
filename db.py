@@ -100,12 +100,16 @@ class User(db.Model):
     email = db.Column(db.String, nullable=False)
     bankStatementURL = db.Column(db.String, nullable=False)
     password_digest = db.Column(db.String, nullable=False)
+
     #application- relationship
     applications = db.relationship("LoanApplication", cascade="delete")
 
 
 
     #financial health information, which will be initialized using the ML model. 
+    overall_score = db.Column(db.Integer, nullable=False)
+    credit_history = db.Column(db.Integer, nullable=False)
+
     #session information:
     session_token = db.Column(db.String, nullable=False)
     session_expiration = db.Column(db.DateTime, nullable=False)
@@ -158,11 +162,21 @@ def create_User(fullName, bankStatementURL, email, password):
         return False, None
     
     #use the ML model HERE to instatiate the new user with ML model outputs. 
+    overall_score, creditHistory = ML_model(bankStatementURL)
     #right down below in our initializer:
-    newUser=User(fullName=fullName, email=email, password=password, bankStatementURL=bankStatementURL)
+    newUser=User(fullName=fullName, email=email, password=password, bankStatementURL=bankStatementURL, overall_score=overall_score, credit_history=creditHistory)
     db.session.add(newUser)
     db.session.commit()
     return True, newUser
+
+
+def ML_model(bankStatementURL):
+    #use the ML model to instatiate the user's properties. (overall score, credit history).  
+    #then, send over the overall score and credit history to the create_User function.
+    overall_score = 92
+    creditHistory = 700
+    return overall_score, creditHistory
+    
 
 #for User login:
 def verify_credentials(email, password):
@@ -211,12 +225,14 @@ class LoanApplication(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     dateApplied = db.Column(db.DateTime, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)  # Correct column name
+    status = db.Column(db.String, nullable=False)
 
 
     # Initialize
     def __init__(self, **kwargs):
         self.dateApplied = kwargs.get("dateApplied", None)
         self.user_id = kwargs.get("user_id")
+        self.status = kwargs.get("status", None)
 
 
     # Serialize
@@ -224,5 +240,6 @@ class LoanApplication(db.Model):
         return {
             "id": self.id,
             "dateApplied": self.dateApplied.strftime("%Y-%m-%d %H:%M:%S"),
-            "user_id": self.user_id
+            "user_id": self.user_id,
+            "status": self.status
         }

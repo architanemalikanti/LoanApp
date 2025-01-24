@@ -169,17 +169,72 @@ def secret_message():
     return success_response("Hello World!")
 
 
+#route for a user to apply to a loan
+@app.route("/applyLoan/", methods=["POST"])
+def apply_loan():
+    body = json.loads(request.data)
+    email=body.get('email')
+    password = body.get('password')
+    bankStatementURL=body.get('bankStatementURL')
 
-# #add a loan applicant route
-# @app.route("/adduser/", methods=["POST"])
-# def add_user():
-#     body = json.loads(request.data)
+    #call the ML model to instatiate the user's properties. (overall score, credit history).  
+    #add the user to the loanApplication table. 
+    
+    return success_response({
+        "success": True,
+        "session_token": user.session_token,
+        "session_expiration": str(user.session_expiration),
+        "update_token": user.update_token
 
+    })
     
 
-# #retrieve data for a loan applicant
-# @app.route("/processusers/", methods=["POST"])
-# def process_users():
+#route for a banker to recieve all loan applicants
+@app.route("/allLoanApplicants/", methods=["GET"])
+def loan_applicants():
+    #return all users in the "LoanApplication" table. 
+
+
+#route for a banker to reject a loan appliant
+@app.route("/rejectApplicant/", methods=["POST"])
+def reject_applicant():
+    #route to reject an applicant. 
+    #set the "acceptOrReject" field to FALSE: means rejected. true means accepted.
+
+
+#route for a banker to accept a loan appliant
+@app.route("/acceptApplicant/", methods=["POST"])
+def accept_applicant():
+    #route to reject an applicant. 
+    #set the "acceptOrReject" field to TRUE: means rejected. true means accepted.
+
+
+#route that displays a user's information: credit score, credit history, etc.
+@app.route("/displayApplicant/", methods=["GET"])
+def display_applicant():
+    #route to display a user's information. 
+    #return the user's information from the User table.
+
+
+
+#route to return a user's ID. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   
 
